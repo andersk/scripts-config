@@ -1,0 +1,12 @@
+---
+- hosts: scripts-servers
+  sudo: true
+  tasks:
+  - yum: name=libselinux-python state=present
+  - selinux: state=disabled
+  - copy: src=scripts.repo dest=/etc/yum.repos.d/
+  - yum: name={{ item }} state=present
+    with_items:
+    - scripts-base
+  - yum: name=* state=latest
+  - service: name=httpd enabled=yes state=started
